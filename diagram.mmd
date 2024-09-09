@@ -1,0 +1,41 @@
+%% graph LR;
+%%     A-->N-->|YES|B;
+%%     A-->C;
+%%     B-->D;
+%%     C-->B;
+
+graph LR;
+    A[American];
+    B[English];
+    C[French];
+    D[German];
+    CND[Canadian];
+
+    H[Stylish clothes]-->G;
+    F-->G([And]);
+    F[Is polite]-->B[English];
+    G-->I[Elegant]-->OR_2([AND]);
+    J[Visits museums]-->K([And]);
+    L[Visits traditional foods restaurants]-->K;
+    M[Looks for authentic experiences]-->K;
+    K-->N[Interested in history and culture]-->OR_2-->INTELECTUAL[Intelectual]-->C;
+    O[Has weird accent]-->B
+
+    P[Visits local pubs]-->Q([And]);
+    R[Is loud]-->Q;
+    Q-->S[Drinks a lot];
+    S-->B
+
+    T[Is always on time]-->U([And]);
+    V[Is punctual]-->U;
+    U-->W[Respects rules];
+
+    X[Says `God save the king` a lot]-->OR([OR]);
+    Y[Has a flag on T-Shirt]-->OR;
+    OR-->Z[Is patriotic];
+    Z-->B
+    Z-->A
+
+    SCARF[Wears a scarf]-->C
+
+
