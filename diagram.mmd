@@ -5,37 +5,29 @@
 %%     C-->B;
 
 graph LR;
-    A[American];
-    B[English];
-    C[French];
-    D[German];
-    CND[Canadian];
+    American[American];
+    English[English];
+    French[French];
+    German[German];
+    Canadian[Canadian];
 
-    H[Stylish clothes]-->G;
-    F-->G([And]);
-    F[Is polite]-->B[English];
-    G-->I[Elegant]-->OR_2([AND]);
-    J[Visits museums]-->K([And]);
-    L[Visits traditional foods restaurants]-->K;
-    M[Looks for authentic experiences]-->K;
-    K-->N[Interested in history and culture]-->OR_2-->INTELECTUAL[Intelectual]-->C;
-    O[Has weird accent]-->B
+    Polite[Is polite]-->English;
+    Polite-->G([And]);
+    Stylish[Stylish clothes]-->G-->Elegant[Elegant]-->OR_2([OR]);
+    Museums[Visits museums]-->K([And]);
+    Traditional[Visits traditional foods restaurants]-->K;
+    Authentic[Looks for authentic experiences]-->K;
+    K-->History[Interested in history and culture]-->OR_2-->Intelectual[Intelectual]-->French;
+    Accent[Has weird accent]-->English
 
-    P[Visits local pubs]-->Q([And]);
-    R[Is loud]-->Q;
-    Q-->S[Drinks a lot];
-    S-->B
+    Pubs[Visits local pubs]-->Q([And]);
+    Loud[Is loud]-->Q-->Drinks[Drinks a lot]-->English
 
-    T[Is always on time]-->U([And]);
-    V[Is punctual]-->U;
-    U-->W[Respects rules];
+    Time[Is always on time]-->U([And]);
+    Curse[Doesn't curse?]-->U-->Rules[Respects rules];
 
-    X[Says `God save the king` a lot]-->OR([OR]);
-    Y[Has a flag on T-Shirt]-->OR;
-    OR-->Z[Is patriotic];
-    Z-->B
-    Z-->A
+    God[Says `God save the king` a lot]-->OR([OR]);
+    Y[Has a flag on T-Shirt]-->OR-->Patriotic[Is patriotic]-->English
+    Patriotic-->American
 
-    SCARF[Wears a scarf]-->C
-
-
+    Scarf[Wears a scarf]-->French;
