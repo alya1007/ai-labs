@@ -1,9 +1,3 @@
-%% graph LR;
-%%     A-->N-->|YES|B;
-%%     A-->C;
-%%     B-->D;
-%%     C-->B;
-
 graph LR;
     American[American];
     English[English];
@@ -11,23 +5,37 @@ graph LR;
     German[German];
     Canadian[Canadian];
 
+    Friendly[Is friendly]-->AND_3([AND]);
+    Sorry[Apologizes a lot]-->AND_3;
+    Sorry-->Canadian
+    
     Polite[Is polite]-->English;
-    Polite-->G([And]);
-    Stylish[Stylish clothes]-->G-->Elegant[Elegant]-->OR_2([OR]);
-    Museums[Visits museums]-->K([And]);
-    Traditional[Visits traditional foods restaurants]-->K;
-    Authentic[Looks for authentic experiences]-->K;
-    K-->History[Interested in history and culture]-->OR_2-->Intelectual[Intelectual]-->French;
+    AND_3-->Polite;
+    Stylish[Stylish clothes]-->AND_2;
+    Polite-->AND_2([And]);
+    Museums[Visits museums]-->Or([Or]);
+    Traditional[Visits traditional foods restaurants]-->Or;
+    Authentic[Looks for authentic experiences]-->Or;
+    Or-->History[Interested in history and culture]-->AND_4-->Intelectual[Intelectual]-->French;
     Accent[Has weird accent]-->English
 
-    Pubs[Visits local pubs]-->Q([And]);
-    Loud[Is loud]-->Q-->Drinks[Drinks a lot]-->English
+    Pubs[Visits local pubs]-->AND_5([And]);
+    Loud[Is loud]-->AND_5-->Drinks[Drinks a lot]-->English
 
-    Time[Is always on time]-->U([And]);
-    Curse[Doesn't curse?]-->U-->Rules[Respects rules];
+    Time[Is always on time]-->German;
+    Polite-->AND_6([And]);
+    Curse[Doesn't curse]-->AND_6-->Rules[Respects rules]-->German;
 
     God[Says `God save the king` a lot]-->OR([OR]);
-    Y[Has a flag on T-Shirt]-->OR-->Patriotic[Is patriotic]-->English
+    Flag[Has a flag on T-Shirt]-->OR-->Patriotic[Is patriotic]-->English
+    AND_2-->Elegant[Elegant]-->AND_4([And]);
     Patriotic-->American
+    FastFood[Visits fast food places]-->American;
+    Smiles[Smiles a lot]-->American;
 
     Scarf[Wears a scarf]-->French;
+    Blue[Has blonde hair and blue eyes]-->German;
+    Drinks-->German;
+
+    Clothes[Weirs a red plaid shirt]-->Canadian;
+
