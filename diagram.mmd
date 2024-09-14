@@ -4,6 +4,7 @@ graph LR;
     French[French];
     German[German];
     Canadian[Canadian];
+    Loonie[Loonie];
 
     Friendly[Is friendly]-->AND_3([AND]);
     Sorry[Apologizes a lot]-->AND_3;
@@ -42,3 +43,7 @@ graph LR;
     Beard[Has a long beard]-->OR_4;
 
     Language[Doesn't speak English]-->French;
+
+    History-->Loonie;
+    LocalLanguage[Speaks local language]-->Loonie;
+    Sunglasses[Wears sunglasses]-->Loonie;
