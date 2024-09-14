@@ -1,6 +1,6 @@
 graph LR;
     American[American];
-    English[English];
+    English[British];
     French[French];
     German[German];
     Canadian[Canadian];
@@ -38,4 +38,7 @@ graph LR;
     Drinks-->German;
 
     Clothes[Weirs a red plaid shirt]-->Canadian;
+    Hair[Has messy hair]-->OR_4([OR])-->Style[Doesn't care about style]-->Canadian;
+    Beard[Has a long beard]-->OR_4;
 
+    Language[Doesn't speak English]-->French;
