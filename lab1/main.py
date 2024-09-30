@@ -1,21 +1,40 @@
-# TODO: add your imports here:
-# from rules import my_rules
+from production import forward_chain
+from rules import TOURIST_RULES, QUESTION_MAP
+
+TOURIST_TYPES = {'American', 'British',
+                 'French', 'German', 'Canadian', 'Loonie'}
 
 
-if __name__=='__main__':
+def expert_system():
+    data = []
+    rejected_tourists = []
+    while True:
+        for fact, question in QUESTION_MAP.items():
+            if fact not in data:
+                answer = input(f"{question} (yes/no): ").strip().lower()
+                if answer == 'yes':
+                    data.append(f'tourist {fact}')
+                else:
+                    data.append(f'not tourist {fact}')
 
-    #TODO: implement your code here!
-    
-    # example how to print output:
-    print("Welcome to Expert System! TODO: implement")
+            inferred_facts = forward_chain(TOURIST_RULES, data)
 
-    # an example how to read input:
-    input_name = input("please write your name:\n")
+            for fact in inferred_facts:
+                if any(tourist in fact for tourist in TOURIST_TYPES) and fact.split()[-1] not in rejected_tourists:
+                    tourist_type = fact.split()[-1]
+                    confirm = input(f"Is the tourist {
+                                    tourist_type}? (yes/no): ").strip().lower()
+                    if confirm == 'yes':
+                        print(f"The tourist is {tourist_type}.")
+                        return
+                    else:
+                        print("Let's continue asking questions.")
+                        print("\n")
+                        rejected_tourists.append(tourist_type)
+                    break
 
-    print("Hello, ", input_name, "!")
+        print("Couldn't deduce the tourist type yet, asking more questions...")
 
-    # example how to read a numeric input:
-    input_age = int(input("what is your age?\n"))
-    print("Your age is", input_age)
 
-    print("Great! Now please implement the code for the lab :) ")
+if __name__ == '__main__':
+    expert_system()
