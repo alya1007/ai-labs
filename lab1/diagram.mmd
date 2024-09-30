@@ -6,22 +6,19 @@ graph LR;
     Canadian[Canadian];
     Loonie[Loonie];
 
-    Friendly[Is friendly]-->AND_3([AND]);
-    Sorry[Apologizes a lot]-->AND_3;
+    Sorry[Apologizes a lot]-->OR_5;
+    Friendly[Is friendly]-->OR_5([OR]);
     Sorry-->Canadian
     
     Polite[Is polite]-->English;
-    AND_3-->Polite;
-    Stylish[Stylish clothes]-->AND_2;
-    Polite-->AND_2([And]);
-    Museums[Visits museums]-->Or([Or]);
-    Traditional[Visits traditional foods restaurants]-->Or;
-    Authentic[Looks for authentic experiences]-->Or;
-    Or-->History[Interested in history and culture]-->AND_4-->Intelectual[Intelectual]-->French;
+    OR_5-->Polite;
+    Blue[Has blonde hair and blue eyes]-->German;
+    Museums[Visits museums]-->Or([OR]);
+    Traditional[Visits traditional restaurants]-->Or;
+    Or-->Culture[Interested in culture]-->AND_4-->Intelectual[Intelectual]-->French;
     Accent[Has weird accent]-->English
 
-    Pubs[Visits local pubs]-->AND_5([And]);
-    Loud[Is loud]-->AND_5-->Drinks[Drinks a lot]-->English
+    Pubs[Visits local pubs]-->OR_6([OR]);
 
     Time[Is always on time]-->German;
     Polite-->AND_6([And]);
@@ -29,21 +26,19 @@ graph LR;
 
     God[Says `God save the king` a lot]-->OR([OR]);
     Flag[Has a flag on T-Shirt]-->OR-->Patriotic[Is patriotic]-->English
-    AND_2-->Elegant[Elegant]-->AND_4([And]);
+    Loud[Is loud]-->OR_6-->Drinks[Drinks a lot]-->English
+    Stylish[Is stylish]-->AND_4([And]);
     Patriotic-->American
+    LocalLanguage[Speaks local language]-->Loonie;
     FastFood[Visits fast food places]-->American;
     Smiles[Smiles a lot]-->American;
 
     Scarf[Wears a scarf]-->French;
-    Blue[Has blonde hair and blue eyes]-->German;
     Drinks-->German;
 
-    Clothes[Weirs a red plaid shirt]-->Canadian;
-    Hair[Has messy hair]-->OR_4([OR])-->Style[Doesn't care about style]-->Canadian;
     Beard[Has a long beard]-->OR_4;
 
-    Language[Doesn't speak English]-->French;
+    Clothes[Weirs a red plaid shirt]-->Canadian;
 
-    History-->Loonie;
-    LocalLanguage[Speaks local language]-->Loonie;
-    Sunglasses[Wears sunglasses]-->Loonie;
+    Culture-->Loonie;
+    Hair[Has messy hair]-->OR_4([OR])-->Style[Doesn't care about style]-->Canadian;
