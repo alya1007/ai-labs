@@ -105,7 +105,7 @@ AIRegex = re.compile(r'\(\?(\S+)\)')
 
 
 def AIStringToRegex(AIStr):
-    res = AIRegex.sub(r'(?P<\1>\S+)', AIStr)+'$'
+    res = AIRegex.sub(r'(?P<\1>\\S+)', AIStr) + '$'
     return res
 
 
