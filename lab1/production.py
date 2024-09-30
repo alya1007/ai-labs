@@ -1,10 +1,4 @@
-# import re
-import sys
-if sys.version[0] == '2':
-    import re
-
-elif sys.version[0] == '3':
-    import regex as re
+import regex as re
 
 from utils import *
 
@@ -21,13 +15,6 @@ except NameError:
         new_lst.sort()
         return new_lst
 
-
-# We've tried to keep the functions you will need for
-# back-chaining at the top of this file. Keep in mind that you
-# can get at this documentation from a Python prompt:
-###
-# >>> import production
-# >>> help(production)
 
 def forward_chain(rules, data, apply_only_one=False, verbose=False):
     """
@@ -77,14 +64,12 @@ def instantiate(template, values_dict):
 
         return template.__class__(*[populate(x, values_dict)
                                     for x in template])
-    # elif isinstance(template, basestring):
     elif isinstance(template, str):
         return AIStringToPyTemplate(template) % values_dict
     else:
         raise ValueError("Don't know how to populate a %s" % type(template))
 
 
-# alternate name for instantiate
 populate = instantiate
 
 
@@ -101,15 +86,12 @@ def match(template, AIStr):
     try:
         return re.match(AIStringToRegex(template),
                         AIStr).groupdict()
-    except AttributeError:  # The re.match() expression probably
-        # just returned None
+    except AttributeError:
         return None
 
 
 def is_variable(str):
     """Is 'str' a variable, of the form '(?x)'?"""
-    # return isinstance(str, basestring) and str[0] == '(' and \
-    #   str[-1] == ')' and re.search( AIStringToRegex(str) )
     return isinstance(str) and str[0] == '(' and \
         str[-1] == ')' and re.search(AIStringToRegex(str))
 
@@ -121,8 +103,7 @@ def variables(exp):
     """
     try:
         return re.search(AIStringToRegex(exp).groupdict())
-    except AttributeError:  # The re.match() expression probably
-        # just returned None
+    except AttributeError:
         return None
 
 
@@ -258,7 +239,6 @@ class RuleExpression(list):
         if not isinstance(condition, str):
             return condition.test_matches(rules, context_so_far)
 
-        # Hm; no convenient test function here
         else:
             return self.basecase_bindings(condition,
                                           rules, context_so_far)
@@ -355,8 +335,7 @@ class NOT(RuleExpression):
     one part."""
 
     def test_matches(self, data, context_so_far={}):
-        assert len(self) == 1  # We're unary; we can only process
-        # one condition
+        assert len(self) == 1
 
         try:
             new_key = populate(self[0], context_so_far)
@@ -409,7 +388,6 @@ def uniq(lst):
     seen = {}
     result = []
     for item in lst:
-        # if not seen.has_key(str(item)):
         if not str(item) in seen:
             result.append(item)
             seen[str(item)] = True
