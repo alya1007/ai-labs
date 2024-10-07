@@ -1,4 +1,5 @@
 import regex as re
+from typing import Dict, Union, cast
 
 from utils import *
 
@@ -40,14 +41,65 @@ def forward_chain(rules, data, apply_only_one=False, verbose=False):
     return data
 
 
-def backward_chain(rules, hypothesis, verbose=False):
-    """
-    Outputs the goal tree from having rules and hyphothesis, works like an "encyclopedia"
-    """
+def backward_chain(rules, hypothesis, visited=None):
+    # Initialize the visited set if it's not passed in
+    if visited is None:
+        visited = set()
 
-    # TODO: you should implement backward_chain algorithm here
+    # Create a unique string representation of the hypothesis for the visited set
+    hypothesis_str = str(hypothesis)
 
-    return "TODO: implement backward_chain"  # change return
+    # If this hypothesis has already been visited, return an empty OR node to prevent infinite recursion
+    if hypothesis_str in visited:
+        return OR()
+
+    # Add the current hypothesis to the visited set
+    visited.add(hypothesis_str)
+
+    # Start with the hypothesis as an OR node (to account for different rules leading to the same conclusion)
+    goal_tree = OR(hypothesis)
+
+    # Iterate through each rule to see if its consequent matches the hypothesis
+    for rule in rules:
+        # Check if the consequent of the rule can be instantiated to match the hypothesis
+        consequent = rule.consequent()
+        if consequent is None:
+            continue
+        if isinstance(consequent, THEN) or isinstance(consequent, list):
+            consequent = consequent[0]
+        if isinstance(hypothesis, str):
+            dicts = filter(
+                lambda x: x is not None, [match(consequent, hypothesis)]
+            )  # bad python LSP
+        else:
+            dicts = filter(
+                lambda x: x is not None,
+                [match(consequent, hypothesis_item)
+                 for hypothesis_item in hypothesis],
+            )
+
+        for bindings in dicts:
+            # Instantiate the antecedent of the rule with the same variable bindings
+            instantiated_antecedent = instantiate(
+                rule.antecedent(), cast(Dict[str, str], bindings)
+            )
+
+            # If the antecedent is a simple string, it's a new hypothesis
+            if isinstance(instantiated_antecedent, str):
+                goal_tree.append(backward_chain(
+                    rules, instantiated_antecedent, visited))
+            else:
+                # If the antecedent is a more complex rule expression (AND/OR), recurse over its components
+                sub_goal_tree = (
+                    OR() if isinstance(instantiated_antecedent, OR) else AND()
+                )
+                for sub_hypothesis in instantiated_antecedent:
+                    sub_goal_tree.append(backward_chain(
+                        rules, sub_hypothesis, visited))
+                goal_tree.append(sub_goal_tree)
+
+    # Simplify the goal tree to remove unnecessary redundancies
+    return simplify(goal_tree)
 
 
 def instantiate(template, values_dict):
