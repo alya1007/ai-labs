@@ -9,6 +9,16 @@ def expert_system():
     data = []
     rejected_tourists = []
     while True:
+        restaurant = input(
+            "Which type of restaurant is the tourist visiting? (traditional, fast food, pubs) ").lower()
+
+        if restaurant == 'traditional':
+            data.append('tourist visits traditional restaurants')
+        elif restaurant == 'fast food':
+            data.append('tourist visits fast food places')
+        elif restaurant == 'pubs':
+            data.append('tourist visits local pubs')
+
         for fact, question in QUESTION_MAP.items():
             if fact not in data:
                 answer = input(f"{question} (yes/no): ").strip().lower()
