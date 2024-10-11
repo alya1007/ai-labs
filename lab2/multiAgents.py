@@ -231,15 +231,50 @@ class MinimaxAgent(MultiAgentSearchAgent):
 
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
-    """
-      Here is the place to define your Alpha-Beta Pruning Algorithm
-    """
-
     def getAction(self, gameState):
-        """
-          Your code here
-        """
-        pass
+        def minimax(gameState, depth, alpha, beta, agentIndex):
+            if depth == 0 or gameState.isWin() or gameState.isLose():
+                return self.evaluationFunction(gameState)
+
+            if agentIndex == 0:
+                maxEval = float("-inf")
+                for action in gameState.getLegalActions(agentIndex):
+                    eval = minimax(gameState.generateSuccessor(
+                        agentIndex, action), depth - 1, alpha, beta, agentIndex + 1)
+                    maxEval = max(maxEval, eval)
+                    alpha = max(alpha, eval)
+                    if beta <= alpha:
+                        break
+                return maxEval
+            else:
+                minEval = float("inf")
+                for action in gameState.getLegalActions(agentIndex):
+                    # If last ghost then next agent is pacman
+                    if agentIndex == gameState.getNumAgents() - 1:
+                        eval = minimax(gameState.generateSuccessor(
+                            agentIndex, action), depth - 1, alpha, beta, 0)
+                    # Else next agent is ghost
+                    else:
+                        eval = minimax(gameState.generateSuccessor(
+                            agentIndex, action), depth, alpha, beta, agentIndex + 1)
+                    minEval = min(minEval, eval)
+                    beta = min(beta, eval)
+                    if beta <= alpha:
+                        break
+                return minEval
+
+        bestAction = Directions.STOP
+
+        v = float("-inf")
+
+        for action in gameState.getLegalActions(0):
+            temp = minimax(gameState.generateSuccessor(
+                0, action), self.depth, float("-inf"), float("inf"), 1)
+            if temp > v:
+                v = temp
+                bestAction = action
+
+        return bestAction
 
 
 class AStarMinimaxAgent(MultiAgentSearchAgent):
