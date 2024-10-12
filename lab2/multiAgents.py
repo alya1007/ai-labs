@@ -166,6 +166,38 @@ def scoreEvaluationFunction(currentGameState):
     return score
 
 
+def advancedScoreEvaluationFunction(currentGameState):
+    """
+        Adjustments:
+        - Encourage moving closer to food
+        - Penalize getting closer to ghosts
+        - Encourage eating all food
+        - Encourage eating power pellets
+    """
+    foods = currentGameState.getFood()
+    capsules = currentGameState.getCapsules()
+
+    if currentGameState.isWin():
+        return float("inf")
+    if currentGameState.isLose():
+        return float("-inf")
+
+    palletScore, ghostDanger = minDistances(currentGameState)
+    # Evaluate score
+    score = currentGameState.getScore()
+
+    # Adjust score based on food distance and ghost danger
+    score += 10 / (palletScore + 1)  # Encourage moving closer to food
+    if ghostDanger != float("inf"):  # Only adjust for ghosts if they are near
+        score -= 10 / (ghostDanger + 1)  # Penalize getting closer to ghosts
+
+    # Reward for fewer remaining food pellets and capsules
+    score += 100 / (len(foods.asList()) + 1)  # Encourage eating all food
+    score += 100 / (len(capsules) + 1)  # Encourage eating power pellets
+
+    return score
+
+
 class MultiAgentSearchAgent(Agent):
     """
       This class provides some common elements to all of your
