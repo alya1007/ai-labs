@@ -309,6 +309,49 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         return bestAction
 
 
+class MinimaxImprovedAgent(MultiAgentSearchAgent):
+    def getAction(self, gameState):
+
+        def minimax(gameState, depth, agentIndex):
+            if depth == 0 or gameState.isWin() or gameState.isLose():
+                return self.evaluationFunction(gameState)
+
+            if agentIndex == 0:
+                maxEval = float("-inf")
+                for action in gameState.getLegalActions(agentIndex):
+                    eval = minimax(gameState.generateSuccessor(
+                        agentIndex, action), depth - 1, agentIndex + 1)
+                    maxEval = max(maxEval, eval)
+                return maxEval
+            else:
+                minEval = float("inf")
+                for action in gameState.getLegalActions(agentIndex):
+                    # If last ghost then next agent is pacman
+                    if agentIndex == gameState.getNumAgents() - 1:
+                        eval = minimax(gameState.generateSuccessor(
+                            agentIndex, action), depth - 1, 0)
+                    # Else next agent is ghost
+                    else:
+                        eval = minimax(gameState.generateSuccessor(
+                            agentIndex, action), depth, agentIndex + 1)
+                    minEval = min(minEval, eval)
+                return minEval
+
+        bestAction = Directions.STOP
+
+        v = float("-inf")
+
+        for d in range(1, self.depth + 1):
+            for action in gameState.getLegalActions(0):
+                temp = minimax(gameState.generateSuccessor(
+                    0, action), d, 1)
+                if temp > v:
+                    v = temp
+                    bestAction = action
+
+        return bestAction
+
+
 class AStarMinimaxAgent(MultiAgentSearchAgent):
     """
       Your Minimax algorithm with A* path searching improvement agent
