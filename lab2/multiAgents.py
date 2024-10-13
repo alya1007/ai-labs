@@ -352,75 +352,29 @@ class MinimaxImprovedAgent(MultiAgentSearchAgent):
         return bestAction
 
 
-class AStarMinimaxAgent(MultiAgentSearchAgent):
-    """
-      Your Minimax algorithm with A* path searching improvement agent
-    """
+def aStarSearch(gameState, pacmanPos, targetFood):
+    frontier = util.PriorityQueue()
+    startState = (pacmanPos, [])
+    frontier.push(startState, 0)
 
-    def getAction(self, gameState):
-        """
-          Your code here
-        """
-        pass
+    explored = set()
 
+    while not frontier.isEmpty():
+        (currentPos, actions) = frontier.pop()
 
-class AStarAlphaBetaAgent(MultiAgentSearchAgent):
-    """
-      Your Alpha-Beta pruning algorithm with A* path searching improvement agent
-    """
+        if currentPos == targetFood:
+            return actions
 
-    def getAction(self, gameState):
-        """
-          Your code here
-        """
-        pass
+        if currentPos not in explored:
+            explored.add(currentPos)
+            for action in gameState.getLegalActions(0):
+                successor = gameState.generatePacmanSuccessor(
+                    action)
+                successorPos = successor.getPacmanPosition()
+                newActions = actions + [action]
+                # cost is the sum of the number of actions and the manhattan distance to the target food
+                cost = len(newActions) + \
+                    manhattanDistance(successorPos, targetFood)
+                frontier.push((successorPos, newActions), cost)
 
-
-def betterEvaluationFunction(currentGameState):
-    """
-      Your extreme ghost-hunting, pellet-nabbing, food-gobbling, unstoppable
-      evaluation function (question 5).
-
-      DESCRIPTION: <write something here so we know what you did>
-    """
-    "*** YOUR CODE HERE ***"
-    pacmanPos = currentGameState.getPacmanPosition()
-    ghostList = currentGameState.getGhostStates()
-    foods = currentGameState.getFood()
-    capsules = currentGameState.getCapsules()
-    # Return based on game state
-    if currentGameState.isWin():
-        return float("inf")
-    if currentGameState.isLose():
-        return float("-inf")
-    # Populate foodDistList and find minFoodDist
-    foodDistList = []
-    for each in foods.asList():
-        foodDistList = foodDistList + [util.manhattanDistance(each, pacmanPos)]
-    minFoodDist = min(foodDistList)
-    # Populate ghostDistList and scaredGhostDistList, find minGhostDist and minScaredGhostDist
-    ghostDistList = []
-    scaredGhostDistList = []
-    for each in ghostList:
-        if each.scaredTimer == 0:
-            ghostDistList = ghostDistList + \
-                [util.manhattanDistance(pacmanPos, each.getPosition())]
-        elif each.scaredTimer > 0:
-            scaredGhostDistList = scaredGhostDistList + \
-                [util.manhattanDistance(pacmanPos, each.getPosition())]
-    minGhostDist = -1
-    if len(ghostDistList) > 0:
-        minGhostDist = min(ghostDistList)
-    minScaredGhostDist = -1
-    if len(scaredGhostDistList) > 0:
-        minScaredGhostDist = min(scaredGhostDistList)
-    # Evaluate score
-    score = scoreEvaluationFunction(currentGameState)
-    """
-        Your improved evaluation here
-    """
-    return score
-
-
-# Abbreviation
-better = betterEvaluationFunction
+    return []
