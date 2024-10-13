@@ -434,3 +434,60 @@ class AStarMinimaxAgent(MultiAgentSearchAgent):
                 bestAction = action
 
         return bestAction
+
+
+class AStarAlphaBetaAgent(MultiAgentSearchAgent):
+
+    def getAction(self, gameState):
+
+        def aStarHeuristic(successorGameState, targetFood):
+            pacmanPos = successorGameState.getPacmanPosition()
+            return len(aStarSearch(successorGameState, pacmanPos, targetFood))
+
+        def alphaBeta(gameState, depth, alpha, beta, agentIndex):
+            if depth == 0 or gameState.isWin() or gameState.isLose():
+                return self.evaluationFunction(gameState)
+
+            if agentIndex == 0:
+                maxEval = float("-inf")
+                for action in gameState.getLegalActions(agentIndex):
+                    successor = gameState.generateSuccessor(agentIndex, action)
+                    foodList = successor.getFood().asList()
+                    if foodList:
+                        minFoodDist = min(
+                            [aStarHeuristic(successor, food) for food in foodList])
+                    else:
+                        minFoodDist = 0
+                    eval = alphaBeta(successor, depth - 1, alpha,
+                                     beta, agentIndex + 1) - minFoodDist
+                    maxEval = max(maxEval, eval)
+                    alpha = max(alpha, eval)
+                    if beta <= alpha:
+                        break
+                return maxEval
+            else:
+                minEval = float("inf")
+                for action in gameState.getLegalActions(agentIndex):
+                    if agentIndex == gameState.getNumAgents() - 1:
+                        eval = alphaBeta(gameState.generateSuccessor(
+                            agentIndex, action), depth - 1, alpha, beta, 0)
+                    else:
+                        eval = alphaBeta(gameState.generateSuccessor(
+                            agentIndex, action), depth, alpha, beta, agentIndex + 1)
+                    minEval = min(minEval, eval)
+                    beta = min(beta, eval)
+                    if beta <= alpha:
+                        break
+                return minEval
+
+        bestAction = Directions.STOP
+        v = float("-inf")
+
+        for action in gameState.getLegalActions(0):
+            temp = alphaBeta(gameState.generateSuccessor(
+                0, action), self.depth, float("-inf"), float("inf"), 1)
+            if temp > v:
+                v = temp
+                bestAction = action
+
+        return bestAction
