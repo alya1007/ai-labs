@@ -378,3 +378,59 @@ def aStarSearch(gameState, pacmanPos, targetFood):
                 frontier.push((successorPos, newActions), cost)
 
     return []
+
+
+class AStarMinimaxAgent(MultiAgentSearchAgent):
+
+    def getAction(self, gameState):
+
+        def aStarHeuristic(successorGameState, targetFood):
+            # Get Pacman's current position after the move
+            pacmanPos = successorGameState.getPacmanPosition()
+            return len(aStarSearch(successorGameState, pacmanPos, targetFood))
+
+        def minimax(gameState, depth, agentIndex):
+            if depth == 0 or gameState.isWin() or gameState.isLose():
+                return self.evaluationFunction(gameState)
+
+            if agentIndex == 0:
+                maxEval = float("-inf")
+                for action in gameState.getLegalActions(agentIndex):
+                    successor = gameState.generateSuccessor(agentIndex, action)
+                    # Find closest food using A*
+                    foodList = successor.getFood().asList()
+                    if foodList:
+                        minFoodDist = min(
+                            [aStarHeuristic(successor, food) for food in foodList])
+                    else:
+                        minFoodDist = 0
+                    # This encourages Pacman to move towards food
+                    # as it lowers the evaluation score the farther
+                    # away Pacman is from the food.
+                    eval = minimax(successor, depth - 1,
+                                   agentIndex + 1) - minFoodDist
+                    maxEval = max(maxEval, eval)
+                return maxEval
+            else:
+                minEval = float("inf")
+                for action in gameState.getLegalActions(agentIndex):
+                    if agentIndex == gameState.getNumAgents() - 1:
+                        eval = minimax(gameState.generateSuccessor(
+                            agentIndex, action), depth - 1, 0)
+                    else:
+                        eval = minimax(gameState.generateSuccessor(
+                            agentIndex, action), depth, agentIndex + 1)
+                    minEval = min(minEval, eval)
+                return minEval
+
+        bestAction = Directions.STOP
+        v = float("-inf")
+
+        for action in gameState.getLegalActions(0):
+            temp = minimax(gameState.generateSuccessor(
+                0, action), self.depth, 1)
+            if temp > v:
+                v = temp
+                bestAction = action
+
+        return bestAction
