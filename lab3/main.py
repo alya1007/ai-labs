@@ -1,8 +1,21 @@
 import pygame  # type: ignore
+import argparse
 from game import Game
+from backtracking import backtrack
+from constraint_propagation import ConstraintPropagator
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Sudoku Solver")
+    parser.add_argument(
+        "--bt", action="store_true", help="Use the backtracking solver"
+    )
+    parser.add_argument(
+        "--cp", action="store_true", help="Use the constraint propagation solver"
+    )
+
+    args = parser.parse_args()
+
     # Initialize pygame
     pygame.init()
 
@@ -10,6 +23,8 @@ def main():
     screen = pygame.display.set_mode((500, 600))
     pygame.display.set_caption("SUDOKU SOLVER USING BACKTRACKING")
     game = Game(screen)
+
+    cp = ConstraintPropagator(game.grid, screen, game.dif, game.font_large)
 
     # Main game loop
     run = True
@@ -26,7 +41,10 @@ def main():
                 if event.key == pygame.K_d:
                     game.reset_to_default()
                 elif event.key == pygame.K_RETURN:
-                    game.solve()
+                    if args.bt:
+                        backtrack(game.grid, screen, game.dif, game.font_large)
+                    elif args.cp:
+                        cp.solve()
 
     pygame.quit()
 
