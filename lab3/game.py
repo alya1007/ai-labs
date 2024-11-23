@@ -1,14 +1,17 @@
 import pygame  # type: ignore
 from utils import read_grid_from_file
+from grid_generator import SudokuGridGenerator
 
 
 class Game:
-    def __init__(self, screen):
+    def __init__(self, screen, generate):
         self.screen = screen  # Pygame screen
         self.dif = 500 / 9  # Size of each cell
         self.font_large = pygame.font.SysFont("comicsans", 40)
         self.font_small = pygame.font.SysFont("comicsans", 20)
-        self.default_grid = read_grid_from_file("grid.txt")
+        # self.default_grid = read_grid_from_file("grid.txt")
+        self.default_grid = SudokuGridGenerator().generate(
+            45) if generate else read_grid_from_file("grid.txt")
         self.grid = [row[:] for row in self.default_grid]
 
     def draw(self):
