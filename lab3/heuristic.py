@@ -35,6 +35,7 @@ class HeuristicConstraintPropagator:
                 return True
 
             # Select cell with MRV (Minimum Remaining Values)
+            # prioritizing cells with smaller domains
             unassigned_cells.sort(key=lambda cell: len(
                 self.domains[cell[0]][cell[1]]))
             row, col = unassigned_cells[0]

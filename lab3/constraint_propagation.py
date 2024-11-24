@@ -80,9 +80,6 @@ class ConstraintPropagator:
                     self.grid[i][j] = next(iter(self.domains[i][j]))
             return True
 
-        # Sort cells by the size of their domain (Minimum Remaining Values heuristic)
-        unassigned_cells.sort(key=lambda cell: len(
-            self.domains[cell[0]][cell[1]]))
         row, col = unassigned_cells[0]
 
         for value in self.domains[row][col].copy():
